@@ -1,7 +1,7 @@
-import { app, BrowserWindow, shell, ipcMain } from 'electron'
-import { release } from 'os'
-import path, { join } from 'path'
-import os from 'os'
+import { app, BrowserWindow, shell, ipcMain } from 'electron';
+import { release } from 'os';
+import path, { join } from 'path';
+import os from 'os';
 import installExtension from 'electron-devtools-installer';
 
 // Disable GPU Acceleration for Windows 7
@@ -24,8 +24,7 @@ async function createWindow() {
     webPreferences: {
       preload: join(__dirname, '../preload/index.cjs'),
       nodeIntegration: true,
-      contextIsolation: false,
-      sandbox: false,
+      contextIsolation: false
     },
   })
 
@@ -51,8 +50,8 @@ async function createWindow() {
   })
 
   installExtension('nhdogjmejiglipccpnnnanhbledajbpd')
-    .then((name) => console.log(`Added Extension:  ${name}`))
-    .catch((err) => console.log('An error occurred: ', err));
+    .then((name) => { })
+    .catch((err) => { });
 }
 
 app.whenReady().then(createWindow)

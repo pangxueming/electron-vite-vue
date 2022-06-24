@@ -5,9 +5,6 @@ import messages from './lang';
 
 const storeL = langStore(store);
 
-console.log(storeL);
-console.log(storeL.language);
-
 const i18n = createI18n({
   locale: storeL.language || 'cn',
   fallbackLocale: 'en',

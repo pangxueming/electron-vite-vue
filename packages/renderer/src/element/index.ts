@@ -14,23 +14,27 @@ export function setupElement(app: App) {
     case LanguageType.Chinese:
       app.use(ElementPlus, {
         locale: zhCn,
+        size: 'large'
       })
       break;
 
     case LanguageType.English:
       app.use(ElementPlus, {
         locale: en,
+        size: 'large'
       })
       break;
 
     case LanguageType.Taiwan:
       app.use(ElementPlus, {
-        locale: zhTw
+        locale: zhTw,
+        size: 'large'
       })
 
     default:
       app.use(ElementPlus, {
         locale: zhCn,
+        size: 'large'
       })
       break;
   }

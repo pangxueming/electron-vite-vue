@@ -1,7 +1,23 @@
-@import './transition.css';
-@import './reset.css';
-@import './normalize.css';
+@import "./transition.css";
+@import "./reset.css";
+@import "./normalize.css";
 
-html, body, #app {
+html,
+body,
+#app {
 	height: 100%;
+}
+
+@media only screen and (max-width: 750px) {
+	/* For mobile phones: */
+	body {
+		font-size: 25px;
+	}
+}
+
+@media only screen and (min-width: 751px) {
+	/* For mobile phones: */
+	body {
+		font-size: 50px;
+	}
 }
