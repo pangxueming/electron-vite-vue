@@ -1,13 +1,15 @@
 import type { App } from 'vue'
 import { createI18n } from 'vue-i18n';
-import { langStore, store } from '@/store';
+import { settingsStore, store } from '@/store';
 import messages from './lang';
 
-const storeL = langStore(store);
+const storeS = settingsStore(store);
 
-const i18n = createI18n({
-  locale: storeL.language || 'cn',
+export const i18n = createI18n({
+  locale: storeS.settings.language || 'cn',
   fallbackLocale: 'en',
+  legacy: false,
+  globalInjection: true,
   messages
 })
 

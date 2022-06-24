@@ -11,7 +11,7 @@
       <!-- 语言 -->
       <div class="setting-item">
         <div class="title">{{ settings.language.title }}</div>
-        <el-select v-model="settings.language.value" class="container w-4rem" size="large">
+        <el-select v-model="settings.language.value" class="container w-4rem h-40" size="large">
           <el-option v-for="item in settings.language.selectOpts" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
       </div>
@@ -30,23 +30,39 @@
         <div class="title">{{ settings.versionServerAddress.title }}</div>
         <el-input v-model="settings.versionServerAddress.value" class="container w-4rem h-40" />
       </div>
+      <!-- 设备管理地址 -->
+      <div class="setting-item">
+        <div class="title">{{ settings.deviceManagementAddress.title }}</div>
+        <el-input v-model="settings.deviceManagementAddress.value" class="container w-4rem h-40" />
+      </div>
+      <!-- 设备服务端口 -->
+      <div class="setting-item">
+        <div class="title">{{ settings.deviceServicePort.title }}</div>
+        <el-input v-model="settings.deviceServicePort.value" class="container w-4rem h-40" />
+      </div>
     </div>
 
     <div class="right-container">
-      <img class="save-icon" @mouseenter="changeIcon('save')" @mouseleave="recoveryIcon('save')" :src="saveIcon" />
+      <img class="save-icon" @click="saveSetting" @mouseenter="changeIcon('save')" @mouseleave="recoveryIcon('save')" :src="saveIcon" />
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, watch, reactive } from 'vue';
+import { computed, ref, watch, reactive, onMounted } from 'vue';
 import { ElMessage } from 'element-plus';
 import { useI18n } from 'vue-i18n';
-import { langStore } from '@/store';
+import { settingsStore } from '@/store';
 import { LanguageType } from '@/types';
+import { saveSettings } from '@/utils';
+import { SettingsKey, SettingsType } from '@/typings';
 
 const { tm, locale } = useI18n();
-const store = langStore();
+const store = settingsStore();
+
+onMounted(() => {
+  saveSettings();
+})
 
 const backIcon = ref('src/assets/match3/icon/setting/return-btn.png');
 const saveIcon = ref('src/assets/match3/icon/setting/save-btn.png');
@@ -68,25 +84,33 @@ const settings = reactive({
         label: '繁体',
       }
     ],
-    value: ''
+    value: store.settings.language
   },
   serverAddress: {
     title: tm('setting.serverAddress'),
-    value: ''
+    value: store.settings.serverAddress
   },
   serverPort: {
     title: tm('setting.serverPort'),
-    value: ''
+    value: store.settings.serverPort
   },
   versionServerAddress: {
     title: tm('setting.versionServerAddress'),
-    value: ''
+    value: store.settings.versionServerAddress
+  },
+  deviceManagementAddress: {
+    title: tm('setting.deviceManagementAddress'),
+    value: store.settings.deviceManagementAddress
+  },
+  deviceServicePort: {
+    title: tm('setting.deviceServicePort'),
+    value: store.settings.deviceServicePort
   }
 })
 
 const settingIcon = computed(() => {
   let url: string = 'src/assets/match3/icon/setting/setting-logo-';
-  switch (store.language) {
+  switch (store.settings.language) {
     case LanguageType.Chinese:
       url += `${LanguageType.Chinese}.png`;
       break;
@@ -122,6 +146,24 @@ function recoveryIcon(type: string) {
   } else {
     saveIcon.value = url + 'save-btn.png';
   }
+}
+
+function saveSetting() {
+  let key: keyof SettingsKey;
+  let options: SettingsType = {
+    language: 'cn',
+    serverAddress: '',
+    serverPort: '',
+    versionServerAddress: '',
+    deviceManagementAddress: '',
+    deviceServicePort: ''
+  };
+
+  for (key in settings) {
+    options = { ...options, [key]: settings[key] };
+  }
+
+  store.changeSettings(options);
 }
 
 // function handleChange() {
@@ -173,6 +215,7 @@ function recoveryIcon(type: string) {
   .center-container {
     flex: 3;
     padding: 0 1rem;
+    max-width: 800px;
 
     .setting-item {
       display: flex;

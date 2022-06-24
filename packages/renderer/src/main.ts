@@ -4,7 +4,7 @@ import { setupRouter } from './router';
 import { setupStore } from './store';
 import { setupElement } from './element';
 import { setupI18n } from './i18n';
-import { setupPageRem } from './utils/rem';
+import { setupPageRem } from './utils';
 
 import App from './App.vue';
 

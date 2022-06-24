@@ -27,3 +27,7 @@ export enum SuccessCode {
   ZERO = 0,
   TWO_HUNDRED = 200
 }
+
+export enum SettingsKey {
+  SETTINGS = 'settings'
+}

@@ -4,13 +4,13 @@ import zhCn from 'element-plus/es/locale/lang/zh-cn';
 import zhTw from 'element-plus/es/locale/lang/zh-tw';
 import en from 'element-plus/es/locale/lang/en';
 
-import { store, langStore } from '@/store';
+import { store, settingsStore } from '@/store';
 import { LanguageType } from '@/types';
 
-const storeL = langStore(store);
+const storeS = settingsStore(store);
 
 export function setupElement(app: App) {
-  switch (storeL.language) {
+  switch (storeS.settings.language) {
     case LanguageType.Chinese:
       app.use(ElementPlus, {
         locale: zhCn,

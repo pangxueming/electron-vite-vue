@@ -2,12 +2,6 @@ import cookie from 'js-cookie';
 import { LANGUAGE_KEY, LANGUAGE_STORAGE } from '@/utils/constants';
 import { LanguageType, StorageType } from '@/types';
 
-/**
- * @description: 语言-存储、获取
- * @param {*}
- * @return {*}
- * @author: gumingchen
- */
 export function getLanguage(): string | null | undefined {
   let result: string | null | undefined
   switch (LANGUAGE_STORAGE) {

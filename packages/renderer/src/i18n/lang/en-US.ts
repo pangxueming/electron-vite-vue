@@ -9,6 +9,8 @@ export default {
     language: 'Language',
     serverAddress: 'Server Address',
     serverPort: 'Server Port',
-    versionServerAddress: 'Version Server Address'
+    versionServerAddress: 'Version Server Address',
+    deviceManagementAddress: 'Device Management Address',
+    deviceServicePort: 'Device Service Port'
   }
 };
