@@ -9,6 +9,6 @@ export default {
     language: '語言',
     serverAddress: '服務器地址',
     serverPort: '服務器端口',
-    versionServerSddress: '版本服務器地址'
+    versionServerAddress: '版本服務器地址'
   }
 };
