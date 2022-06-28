@@ -52,7 +52,6 @@
     "js-cookie": "^3.0.1",
     "lodash": "^4.17.21",
     "mande": "^2.0.2",
-    "naive-ui": "^2.30.5",
     "node-sass": "^7.0.1",
     "pinia": "^2.0.14",
     "unplugin-element-plus": "^0.4.0",

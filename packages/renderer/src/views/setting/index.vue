@@ -53,19 +53,28 @@ import { computed, ref, watch, reactive, onMounted } from 'vue';
 import { ElMessage } from 'element-plus';
 import { useI18n } from 'vue-i18n';
 import { settingsStore } from '@/store';
+import service from "@/utils/request";
 import { LanguageType } from '@/types';
-import { saveSettings } from '@/utils';
 import { SettingsKey, SettingsType } from '@/typings';
 
 const { tm, locale } = useI18n();
 const store = settingsStore();
 
 onMounted(() => {
-  saveSettings();
+  console.log(service);
+  service({ url: '/match2/management/system/testServerAlive' })
 })
 
 const backIcon = ref('src/assets/match3/icon/setting/return-btn.png');
 const saveIcon = ref('src/assets/match3/icon/setting/save-btn.png');
+const {
+  language,
+  serverAddress,
+  serverPort,
+  versionServerAddress,
+  deviceManagementAddress,
+  deviceServicePort
+} = store.settings;
 
 const settings = reactive({
   language: {
@@ -77,34 +86,34 @@ const settings = reactive({
       },
       {
         value: 'en',
-        label: 'english',
+        label: 'English',
       },
       {
         value: 'tw',
         label: '繁体',
       }
     ],
-    value: store.settings.language
+    value: language
   },
   serverAddress: {
     title: tm('setting.serverAddress'),
-    value: store.settings.serverAddress
+    value: serverAddress
   },
   serverPort: {
     title: tm('setting.serverPort'),
-    value: store.settings.serverPort
+    value: serverPort
   },
   versionServerAddress: {
     title: tm('setting.versionServerAddress'),
-    value: store.settings.versionServerAddress
+    value: versionServerAddress
   },
   deviceManagementAddress: {
     title: tm('setting.deviceManagementAddress'),
-    value: store.settings.deviceManagementAddress
+    value: deviceManagementAddress
   },
   deviceServicePort: {
     title: tm('setting.deviceServicePort'),
-    value: store.settings.deviceServicePort
+    value: deviceServicePort
   }
 })
 
@@ -160,23 +169,12 @@ function saveSetting() {
   };
 
   for (key in settings) {
-    options = { ...options, [key]: settings[key] };
+    options = { ...options, [key]: settings[key].value };
   }
+
 
   store.changeSettings(options);
 }
-
-// function handleChange() {
-//   store.setLanguage(value.value);
-
-//   locale.value = value.value;
-// }
-
-// function changeLanguage() {
-//   store.setLanguage(value.value);
-
-//   locale.value = value.value;
-// }
 
 </script>
 
