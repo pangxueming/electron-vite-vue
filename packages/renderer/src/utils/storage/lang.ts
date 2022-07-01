@@ -1,6 +1,7 @@
 import cookie from 'js-cookie';
 import { LANGUAGE_KEY, LANGUAGE_STORAGE } from '@/utils/constants';
 import { LanguageType, StorageType } from '@/types';
+import { getItem, removeItem, setItem } from '.';
 
 export function getLanguage(): string | null | undefined {
   let result: string | null | undefined
@@ -12,10 +13,10 @@ export function getLanguage(): string | null | undefined {
       result = sessionStorage.getItem(LANGUAGE_KEY)
       break
     case StorageType.LOCAL:
-      result = localStorage.getItem(LANGUAGE_KEY)
+      result = getItem(LANGUAGE_KEY)
       break
     default:
-      result = localStorage.getItem(LANGUAGE_KEY)
+      result = getItem(LANGUAGE_KEY)
       break
   }
 
@@ -30,10 +31,10 @@ export function setLanguage(language: string = LanguageType.Chinese): void {
       sessionStorage.setItem(LANGUAGE_KEY, language)
       break
     case StorageType.LOCAL:
-      localStorage.setItem(LANGUAGE_KEY, language)
+      setItem(LANGUAGE_KEY, language)
       break
     default:
-      localStorage.setItem(LANGUAGE_KEY, language)
+      setItem(LANGUAGE_KEY, language)
       break
   }
 }
@@ -46,7 +47,7 @@ export function clearLanguage(): void {
       sessionStorage.removeItem(LANGUAGE_KEY)
       break
     case StorageType.LOCAL:
-      localStorage.removeItem(LANGUAGE_KEY)
+      removeItem(LANGUAGE_KEY)
       break
     default:
       cookie.remove(LANGUAGE_KEY)

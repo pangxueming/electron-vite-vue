@@ -3,7 +3,7 @@
     <div class="left-container">
       <img class="setting-icon" :src="settingIcon" />
       <div class="back-icon-container">
-        <img class="back-icon" @mouseenter="changeIcon('back')" @mouseleave="recoveryIcon('back')" :src="backIcon" />
+        <img class="back-icon" @mouseenter="changeIcon('back')" @mouseleave="recoveryIcon('back')" :src="returnIcon" />
       </div>
     </div>
 
@@ -40,6 +40,10 @@
         <div class="title">{{ settings.deviceServicePort.title }}</div>
         <el-input v-model="settings.deviceServicePort.value" class="container w-4rem h-40" />
       </div>
+
+      <div class="internet-status">
+
+      </div>
     </div>
 
     <div class="right-container">
@@ -49,24 +53,40 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, watch, reactive, onMounted } from 'vue';
+import {
+  computed,
+  ref,
+  watch,
+  reactive,
+  onMounted
+} from 'vue';
 import { ElMessage } from 'element-plus';
 import { useI18n } from 'vue-i18n';
 import { settingsStore } from '@/store';
-import service from "@/utils/request";
+import { requests } from "@/services";
 import { LanguageType } from '@/types';
 import { SettingsKey, SettingsType } from '@/typings';
+import {
+  returnImg,
+  returnImgActive,
+  saveImg,
+  saveImgActive,
+  cnLogo,
+  enLogo,
+  twLogo
+} from '@/utils';
+import { testServerAlive } from '@/services/api/settings';
 
 const { tm, locale } = useI18n();
 const store = settingsStore();
 
-onMounted(() => {
-  console.log(service);
-  service({ url: '/match2/management/system/testServerAlive' })
+onMounted(async () => {
+  const res = await testServerAlive();
+  console.log(res);
 })
 
-const backIcon = ref('src/assets/match3/icon/setting/return-btn.png');
-const saveIcon = ref('src/assets/match3/icon/setting/save-btn.png');
+const returnIcon = ref(returnImg);
+const saveIcon = ref(saveImg);
 const {
   language,
   serverAddress,
@@ -118,42 +138,40 @@ const settings = reactive({
 })
 
 const settingIcon = computed(() => {
-  let url: string = 'src/assets/match3/icon/setting/setting-logo-';
+  let url: string;
   switch (store.settings.language) {
     case LanguageType.Chinese:
-      url += `${LanguageType.Chinese}.png`;
+      url = cnLogo;
       break;
 
     case LanguageType.English:
-      url += `${LanguageType.English}.png`;
+      url = enLogo;
       break;
 
     case LanguageType.Taiwan:
-      url += `${LanguageType.Taiwan}.png`;
+      url = twLogo;
       break;
 
     default:
-      url += `${LanguageType.Taiwan}.png`;
+      url = cnLogo;
       break;
   }
   return url;
 })
 
 function changeIcon(type: string) {
-  const url = 'src/assets/match3/icon/setting/';
   if (type === 'back') {
-    backIcon.value = url + 'return-btn-onclick.png';
+    returnIcon.value = returnImgActive;
   } else {
-    saveIcon.value = url + 'save-btn-onclick.png';
+    saveIcon.value = saveImgActive;
   }
 }
 
 function recoveryIcon(type: string) {
-  const url = 'src/assets/match3/icon/setting/';
   if (type === 'back') {
-    backIcon.value = url + 'return-btn.png';
+    returnIcon.value = returnImg;
   } else {
-    saveIcon.value = url + 'save-btn.png';
+    saveIcon.value = saveImg;
   }
 }
 

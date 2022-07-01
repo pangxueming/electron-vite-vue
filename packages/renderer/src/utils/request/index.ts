@@ -16,6 +16,4 @@ const instance = axios.create({
   timeout: TIME_OUT
 })
 
-console.log(instance);
-
 export default instance;
