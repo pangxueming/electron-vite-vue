@@ -9,6 +9,7 @@ import AutoImport from 'unplugin-auto-import/vite';
 import Components from 'unplugin-vue-components/vite';
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers';
 import renderer from 'vite-plugin-electron-renderer';
+import ElementPlus from 'unplugin-element-plus/vite';
 
 export default defineConfig({
   mode: process.env.NODE_ENV,
@@ -18,8 +19,16 @@ export default defineConfig({
       '@': path.resolve(__dirname, 'src'),
       'views': path.resolve(__dirname, 'src/views'),
       "Type": path.resolve(__dirname, 'src/types'),
-      "vue-i18n": 'vue-i18n/dist/vue-i18n.cjs.js'
+      "vue-i18n": 'vue-i18n/dist/vue-i18n.cjs.js',
+      '~/': `${path.resolve(__dirname, 'src')}/`,
     }
+  },
+  css: {
+    preprocessorOptions: {
+      scss: {
+        additionalData: `@use "~/styles/element/index.scss" as *;`,
+      },
+    },
   },
   plugins: [
     vue(),
@@ -43,8 +52,11 @@ export default defineConfig({
       resolvers: [ElementPlusResolver()],
     }),
     Components({
-      resolvers: [ElementPlusResolver()],
+      resolvers: [ElementPlusResolver({ importStyle: "sass", })],
     }),
+    ElementPlus({
+      useSource: true,
+    })
   ],
   base: './',
   build: {

@@ -3,6 +3,7 @@ import axios from "axios";
 import nprogress from "nprogress";
 import "nprogress/nprogress.css";
 import { settingsStore } from "@/store";
+import { ElMessage } from "element-plus";
 
 const store = settingsStore();
 
@@ -12,14 +13,13 @@ const baseURL = `http://${serverAddress}:${serverPort}/`;
 // 创建对象
 const requests = axios.create({
   baseURL,
-  timeout: 0,
+  timeout: 1000,
 });
 
 // 请求拦截
 requests.interceptors.request.use((config) => {
   nprogress.start();
   // config配置对象，重要属性header
-  //这里动态添加请求头
   return config;
 });
 
@@ -30,6 +30,12 @@ requests.interceptors.response.use((res) => {
   return res.data;
 }, (error) => {
   // 失败响应函数
+  ElMessage({
+    message: '请求出错了',
+    type: 'error',
+    duration: 60000
+  });
+  nprogress.done();
   return Promise.reject(new Error("请求出错了"));
 });
 
@@ -41,5 +47,4 @@ const post = function (url: string, data?: any) {
   return requests.post(url, data);
 }
 
-//对外暴露
 export { requests, get, post };

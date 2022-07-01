@@ -1,53 +1,49 @@
 <template>
   <div class="setting-page">
     <div class="left-container">
-      <img class="setting-icon" :src="settingIcon" />
+      <img class="setting-icon"
+           :src="settingIcon" />
       <div class="back-icon-container">
-        <img class="back-icon" @mouseenter="changeIcon('back')" @mouseleave="recoveryIcon('back')" :src="returnIcon" />
+        <img class="back-icon"
+             @mouseenter="changeIcon('back')"
+             @mouseleave="recoveryIcon('back')"
+             :src="returnIcon" />
       </div>
     </div>
 
     <div class="center-container">
       <!-- 语言 -->
-      <div class="setting-item">
-        <div class="title">{{ settings.language.title }}</div>
-        <el-select v-model="settings.language.value" class="container w-4rem h-40" size="large">
-          <el-option v-for="item in settings.language.selectOpts" :key="item.value" :label="item.label" :value="item.value" />
-        </el-select>
-      </div>
-      <!-- 服务器地址 -->
-      <div class="setting-item">
-        <div class="title">{{ settings.serverAddress.title }}</div>
-        <el-input v-model="settings.serverAddress.value" class="container w-4rem h-40" />
-      </div>
+      <SettingSelect :title="settings.language.title"
+                     :value="settings.language.value"
+                     :selectOpts="settings.language.selectOpts"
+                     @vModelLanguage="changeLanauage" />
+      <!--服务器地址 -->
+      <SettingInput :title="settings.serverAddress.title"
+                    :value="settings.serverAddress.value" />
       <!-- 服务器端口 -->
-      <div class="setting-item">
-        <div class="title">{{ settings.serverPort.title }}</div>
-        <el-input v-model="settings.serverPort.value" class="container w-4rem h-40" />
-      </div>
+      <SettingInput :title="settings.serverPort.title"
+                    :value="settings.serverPort.value" />
       <!-- 版本服务器端口 -->
-      <div class="setting-item">
-        <div class="title">{{ settings.versionServerAddress.title }}</div>
-        <el-input v-model="settings.versionServerAddress.value" class="container w-4rem h-40" />
-      </div>
+      <SettingInput :title="settings.versionServerAddress.title"
+                    :value="settings.versionServerAddress.value" />
       <!-- 设备管理地址 -->
-      <div class="setting-item">
-        <div class="title">{{ settings.deviceManagementAddress.title }}</div>
-        <el-input v-model="settings.deviceManagementAddress.value" class="container w-4rem h-40" />
-      </div>
+      <SettingInput :title="settings.deviceManagementAddress.title"
+                    :value="settings.deviceManagementAddress.value" />
       <!-- 设备服务端口 -->
-      <div class="setting-item">
-        <div class="title">{{ settings.deviceServicePort.title }}</div>
-        <el-input v-model="settings.deviceServicePort.value" class="container w-4rem h-40" />
-      </div>
+      <SettingInput :title="settings.deviceServicePort.title"
+                    :value="settings.deviceServicePort.value" />
 
-      <div class="internet-status">
+      <div class="server-status">
 
       </div>
     </div>
 
     <div class="right-container">
-      <img class="save-icon" @click="saveSetting" @mouseenter="changeIcon('save')" @mouseleave="recoveryIcon('save')" :src="saveIcon" />
+      <img class="save-icon"
+           @click="saveSetting"
+           @mouseenter="changeIcon('save')"
+           @mouseleave="recoveryIcon('save')"
+           :src="saveIcon" />
     </div>
   </div>
 </template>
@@ -76,14 +72,11 @@ import {
   twLogo
 } from '@/utils';
 import { testServerAlive } from '@/services/api/settings';
+import SettingInput from './components/setting-input/index.vue';
+import SettingSelect from './components/setting-select/index.vue';
 
 const { tm, locale } = useI18n();
 const store = settingsStore();
-
-onMounted(async () => {
-  const res = await testServerAlive();
-  console.log(res);
-})
 
 const returnIcon = ref(returnImg);
 const saveIcon = ref(saveImg);
@@ -99,20 +92,16 @@ const {
 const settings = reactive({
   language: {
     title: tm('setting.language'),
-    selectOpts: [
-      {
-        value: 'cn',
-        label: '中文',
-      },
-      {
-        value: 'en',
-        label: 'English',
-      },
-      {
-        value: 'tw',
-        label: '繁体',
-      }
-    ],
+    selectOpts: [{
+      value: 'cn',
+      label: '中文',
+    }, {
+      value: 'en',
+      label: 'English',
+    }, {
+      value: 'tw',
+      label: '繁体',
+    }],
     value: language
   },
   serverAddress: {
@@ -159,6 +148,21 @@ const settingIcon = computed(() => {
   return url;
 })
 
+const serverStatus = ref({
+
+})
+
+onMounted(async () => {
+  try {
+    const res = await testServerAlive();
+    console.log(res);
+  } catch (err) {
+    console.log(err);
+  }
+})
+
+function changeLanauage () {}
+
 function changeIcon(type: string) {
   if (type === 'back') {
     returnIcon.value = returnImgActive;
@@ -189,7 +193,6 @@ function saveSetting() {
   for (key in settings) {
     options = { ...options, [key]: settings[key].value };
   }
-
 
   store.changeSettings(options);
 }
@@ -232,22 +235,6 @@ function saveSetting() {
     flex: 3;
     padding: 0 1rem;
     max-width: 800px;
-
-    .setting-item {
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      margin-bottom: .3rem;
-
-      .title {
-        flex: 2;
-        text-align: center;
-      }
-
-      .container {
-        flex: 3;
-      }
-    }
   }
 
   .right-container {

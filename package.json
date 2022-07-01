@@ -58,6 +58,7 @@
     "vue"
   ],
   "dependencies": {
-    "nprogress": "^0.2.0"
+    "nprogress": "^0.2.0",
+    "postcss-px2rem": "^0.3.0"
   }
 }
