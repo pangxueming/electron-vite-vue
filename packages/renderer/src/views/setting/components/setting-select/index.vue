@@ -1,10 +1,9 @@
 <template>
   <div class="setting-item">
     <div class="title">{{ title }}</div>
-    <el-select v-model="value"
+    <el-select v-model="newVal"
                class="container w-4rem h-40"
-               size="large"
-               @change="changeOpts">
+               size="large">
       <el-option v-for="item in selectOpts"
                  :key="item.value"
                  :label="item.label"
@@ -14,11 +13,35 @@
 </template>
 
 <script setup lang="ts">
-defineProps(['title', 'value', 'selectOpts']);
+import { computed } from 'vue';
+import { LocaleMessageValue } from 'vue-i18n';
 
-function changeOpts() {
-  $emit()
+interface Props {
+  title: LocaleMessageValue | {} | string,
+  value: string,
+  selectOpts: any
 }
+
+interface Emits {
+  (e: 'update:value', value: string): void
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  title: '标题',
+  value: '',
+  selectOpts: []
+})
+
+const emit = defineEmits<Emits>();
+
+const newVal = computed({
+  get() {
+    return props.value;
+  },
+  set(newValue) {
+    emit('update:value', newValue);
+  }
+});
 </script>
 
 <style lang="scss" scoped>

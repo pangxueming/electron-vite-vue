@@ -14,24 +14,23 @@
     <div class="center-container">
       <!-- 语言 -->
       <SettingSelect :title="settings.language.title"
-                     :value="settings.language.value"
-                     :selectOpts="settings.language.selectOpts"
-                     @vModelLanguage="changeLanauage" />
+                     v-model:value="settings.language.value"
+                     :selectOpts="settings.language.selectOpts" />
       <!--服务器地址 -->
       <SettingInput :title="settings.serverAddress.title"
-                    :value="settings.serverAddress.value" />
+                    v-model:value="settings.serverAddress.value" />
       <!-- 服务器端口 -->
-      <SettingInput :title="settings.serverPort.title"
-                    :value="settings.serverPort.value" />
+      <SettingInput :title="settings.managerServerPort.title"
+                    v-model:value="settings.managerServerPort.value" />
       <!-- 版本服务器端口 -->
-      <SettingInput :title="settings.versionServerAddress.title"
-                    :value="settings.versionServerAddress.value" />
+      <SettingInput :title="settings.serverVersionAddress.title"
+                    v-model:value="settings.serverVersionAddress.value" />
       <!-- 设备管理地址 -->
-      <SettingInput :title="settings.deviceManagementAddress.title"
-                    :value="settings.deviceManagementAddress.value" />
+      <SettingInput :title="settings.equipmentManagementAddress.title"
+                    v-model:value="settings.equipmentManagementAddress.value" />
       <!-- 设备服务端口 -->
-      <SettingInput :title="settings.deviceServicePort.title"
-                    :value="settings.deviceServicePort.value" />
+      <SettingInput :title="settings.equipmentPort.title"
+                    v-model:value="settings.equipmentPort.value" />
 
       <div class="server-status">
 
@@ -54,12 +53,12 @@ import {
   ref,
   watch,
   reactive,
-  onMounted
+  onMounted,
+  onUnmounted
 } from 'vue';
 import { ElMessage } from 'element-plus';
 import { useI18n } from 'vue-i18n';
 import { settingsStore } from '@/store';
-import { requests } from "@/services";
 import { LanguageType } from '@/types';
 import { SettingsKey, SettingsType } from '@/typings';
 import {
@@ -77,17 +76,20 @@ import SettingSelect from './components/setting-select/index.vue';
 
 const { tm, locale } = useI18n();
 const store = settingsStore();
-
-const returnIcon = ref(returnImg);
-const saveIcon = ref(saveImg);
 const {
   language,
   serverAddress,
-  serverPort,
-  versionServerAddress,
-  deviceManagementAddress,
-  deviceServicePort
+  managerServerPort,
+  serverVersionAddress,
+  equipmentManagementAddress,
+  equipmentPort
 } = store.settings;
+
+const { setSettingCache, changeSettings } = store;
+
+const returnIcon = ref(returnImg);
+const saveIcon = ref(saveImg);
+let settingIcon = ref('');
 
 const settings = reactive({
   language: {
@@ -108,60 +110,43 @@ const settings = reactive({
     title: tm('setting.serverAddress'),
     value: serverAddress
   },
-  serverPort: {
-    title: tm('setting.serverPort'),
-    value: serverPort
+  managerServerPort: {
+    title: tm('setting.managerServerPort'),
+    value: managerServerPort
   },
-  versionServerAddress: {
-    title: tm('setting.versionServerAddress'),
-    value: versionServerAddress
+  serverVersionAddress: {
+    title: tm('setting.serverVersionAddress'),
+    value: serverVersionAddress
   },
-  deviceManagementAddress: {
-    title: tm('setting.deviceManagementAddress'),
-    value: deviceManagementAddress
+  equipmentManagementAddress: {
+    title: tm('setting.equipmentManagementAddress'),
+    value: equipmentManagementAddress
   },
-  deviceServicePort: {
-    title: tm('setting.deviceServicePort'),
-    value: deviceServicePort
+  equipmentPort: {
+    title: tm('setting.equipmentPort'),
+    value: equipmentPort
   }
 })
 
-const settingIcon = computed(() => {
-  let url: string;
-  switch (store.settings.language) {
+function changeSettingIcon() {
+  switch (language) {
     case LanguageType.Chinese:
-      url = cnLogo;
+      settingIcon.value = cnLogo;
       break;
 
     case LanguageType.English:
-      url = enLogo;
+      settingIcon.value = enLogo;
       break;
 
     case LanguageType.Taiwan:
-      url = twLogo;
+      settingIcon.value = twLogo;
       break;
 
     default:
-      url = cnLogo;
+      settingIcon.value = cnLogo;
       break;
   }
-  return url;
-})
-
-const serverStatus = ref({
-
-})
-
-onMounted(async () => {
-  try {
-    const res = await testServerAlive();
-    console.log(res);
-  } catch (err) {
-    console.log(err);
-  }
-})
-
-function changeLanauage () {}
+}
 
 function changeIcon(type: string) {
   if (type === 'back') {
@@ -179,24 +164,34 @@ function recoveryIcon(type: string) {
   }
 }
 
-function saveSetting() {
+async function saveSetting() {
   let key: keyof SettingsKey;
   let options: SettingsType = {
     language: 'cn',
     serverAddress: '',
-    serverPort: '',
-    versionServerAddress: '',
-    deviceManagementAddress: '',
-    deviceServicePort: ''
+    managerServerPort: '',
+    serverVersionAddress: '',
+    equipmentManagementAddress: '',
+    equipmentPort: ''
   };
 
   for (key in settings) {
     options = { ...options, [key]: settings[key].value };
   }
 
-  store.changeSettings(options);
-}
+  changeSettings(options);
 
+  locale.value = language;
+  try {
+    const res = await testServerAlive();
+    if (res.success) {
+      changeSettingIcon();
+      setSettingCache();
+    }
+  } catch (err) {
+    console.log(err);
+  }
+}
 </script>
 
 <style scoped lang="scss">

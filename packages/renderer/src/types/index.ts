@@ -1,13 +1,4 @@
-/*
- * @Description:
- * @Author: gumingchen
- * @Email: 1240235512@qq.com
- * @Date: 2021-04-30 14:02:12
- * @LastEditors: gumingchen
- * @LastEditTime: 2021-04-30 15:39:56
- */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable no-shadow */
+import { string } from "yargs"
 
 export enum StorageType {
   COOKIE = 'cookie',
@@ -30,4 +21,8 @@ export enum SuccessCode {
 
 export enum SettingsKey {
   SETTINGS = 'settings'
+}
+
+export interface AxiosRequestConfig {
+  baseURL?: string
 }

@@ -30,6 +30,7 @@ export function setupElement(app: App) {
         locale: zhTw,
         size: 'large'
       })
+      break;
 
     default:
       app.use(ElementPlus, {

@@ -4,6 +4,7 @@
   "main": "dist/main/index.cjs",
   "author": "xuemo",
   "license": "MIT",
+  "description": "electron + vue + vite",
   "scripts": {
     "dev": "node scripts/watch.mjs",
     "prebuild": "vue-tsc --noEmit --p packages/renderer/tsconfig.json && node scripts/build.mjs",
@@ -58,7 +59,6 @@
     "vue"
   ],
   "dependencies": {
-    "nprogress": "^0.2.0",
-    "postcss-px2rem": "^0.3.0"
+    "nprogress": "^0.2.0"
   }
 }

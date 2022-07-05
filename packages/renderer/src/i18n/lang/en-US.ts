@@ -5,10 +5,10 @@ export default {
   setting: {
     language: 'Language',
     serverAddress: 'Server Address',
-    serverPort: 'Server Port',
-    versionServerAddress: 'Version Server Address',
-    deviceManagementAddress: 'Device Management Address',
-    deviceServicePort: 'Device Service Port',
+    managerServerPort: 'Server Port',
+    serverVersionAddress: 'Server Version Address',
+    equipmentManagementAddress: 'Equipment Management Address',
+    equipmentPort: 'Equipment Port',
     managementServerUndetected: 'Management server undetected',
     devicesServiceUndetected: 'Match devices service undetected'
   }

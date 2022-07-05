@@ -1,20 +1,20 @@
 import { SettingsType } from '@/typings';
-import { SETTINGS_TYPE } from '@/utils';
+import { getItem, SETTINGS_TYPE } from '@/utils';
 
 const {
   language,
   serverAddress,
-  serverPort,
-  versionServerAddress,
-  deviceManagementAddress,
-  deviceServicePort
-}: SettingsType = JSON.parse(localStorage.getItem(SETTINGS_TYPE) || '{}');
+  managerServerPort,
+  serverVersionAddress,
+  equipmentManagementAddress,
+  equipmentPort
+}: SettingsType = getItem(SETTINGS_TYPE);
 
 export const getDefaultSettings = (): SettingsType => ({
   language: language || 'cn',
   serverAddress: serverAddress || '192.168.1.123',
-  serverPort: serverPort || '8888',
-  versionServerAddress: versionServerAddress || '127.0.0.1',
-  deviceManagementAddress: deviceManagementAddress || 'http://127.0.0.1:8080/match2-download',
-  deviceServicePort: deviceServicePort || '12451'
+  managerServerPort: managerServerPort || '8888',
+  serverVersionAddress: serverVersionAddress || '127.0.0.1',
+  equipmentManagementAddress: equipmentManagementAddress || 'http://127.0.0.1:8080/match2-download',
+  equipmentPort: equipmentPort || '12451'
 });

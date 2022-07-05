@@ -1,22 +1,23 @@
 import { app, BrowserWindow, shell, ipcMain } from 'electron';
 import { release } from 'os';
-import path, { join } from 'path';
-import os from 'os';
+import { join } from 'path';
 import installExtension from 'electron-devtools-installer';
 
 // Disable GPU Acceleration for Windows 7
 if (release().startsWith('6.1')) app.disableHardwareAcceleration()
 
 // Set application name for Windows 10+ notifications
-if (process.platform === 'win32') app.setAppUserModelId(app.getName())
+if (process.platform === 'win32') app.setAppUserModelId(app.getName());
 
 if (!app.requestSingleInstanceLock()) {
-  app.quit()
-  process.exit(0)
+  app.quit();
+  process.exit(0);
 }
-process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true'
+process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
 
-let win: BrowserWindow | null = null
+const isDev = process.env.NODE_ENV === 'development';
+
+let win: BrowserWindow | null = null;
 
 async function createWindow() {
   win = new BrowserWindow({
@@ -24,7 +25,8 @@ async function createWindow() {
     webPreferences: {
       preload: join(__dirname, '../preload/index.cjs'),
       nodeIntegration: true,
-      contextIsolation: false
+      contextIsolation: false,
+      devTools: true
     },
   })
 
@@ -49,12 +51,16 @@ async function createWindow() {
     return { action: 'deny' }
   })
 
-  installExtension('nhdogjmejiglipccpnnnanhbledajbpd')
+  // if (!isDev) {
+  //   win.removeMenu(); // 删除窗口菜单栏
+  // }
+
+  installExtension('nhdogjmejiglipccpnnnanhbledajbpd') // 安装vue-devtools installExtension('xxxx'), xxxx为插件编号
     .then((name) => { })
     .catch((err) => { });
 }
 
-app.whenReady().then(createWindow)
+app.whenReady().then(createWindow);
 
 app.on('window-all-closed', () => {
   win = null

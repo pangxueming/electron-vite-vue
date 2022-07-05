@@ -1,50 +1,44 @@
-// 对axios进行二次封装
 import axios from "axios";
 import nprogress from "nprogress";
 import "nprogress/nprogress.css";
 import { settingsStore } from "@/store";
-import { ElMessage } from "element-plus";
 
 const store = settingsStore();
-
-const { serverAddress, serverPort } = store.settings;
-const baseURL = `http://${serverAddress}:${serverPort}/`;
+const { serverAddress, managerServerPort } = store.settings;
+const baseURL = `http://${serverAddress}:${managerServerPort}`;
 
 // 创建对象
-const requests = axios.create({
+const instance = axios.create({
   baseURL,
-  timeout: 1000,
+  timeout: 0,
 });
 
 // 请求拦截
-requests.interceptors.request.use((config) => {
+instance.interceptors.request.use((config) => {
+  const baseURL = store.getBaseURL();
+  config.baseURL = baseURL;
   nprogress.start();
   // config配置对象，重要属性header
   return config;
 });
 
 // 响应拦截
-requests.interceptors.response.use((res) => {
+instance.interceptors.response.use((res) => {
   // 成功响应函数
   nprogress.done();
   return res.data;
-}, (error) => {
+}, (err) => {
   // 失败响应函数
-  ElMessage({
-    message: '请求出错了',
-    type: 'error',
-    duration: 60000
-  });
   nprogress.done();
   return Promise.reject(new Error("请求出错了"));
 });
 
 const get = function (url: string, queryParam?: any) {
-  return requests.get(url, queryParam);
+  return instance.get(url, queryParam);
 }
 
 const post = function (url: string, data?: any) {
-  return requests.post(url, data);
+  return instance.post(url, data);
 }
 
-export { requests, get, post };
+export { instance, get, post };
